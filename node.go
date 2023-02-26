@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/libp2p/go-libp2p"
 	"github.com/libp2p/go-libp2p-core/crypto"
@@ -118,6 +119,13 @@ func main() {
 	// Set a stream handler on host A.
 	ha.SetStreamHandler("/custom-node/0.1.0", func(s network.Stream) {
 		log.Println("Got a new stream!")
+		log.Println("Peers list:")
+
+		peersList := ha.Peerstore().PeersWithAddrs()
+		for _, peer := range peersList {
+			log.Println(peer)
+		}
+		time.Sleep(2000 * time.Millisecond)
 		if err := doEcho(s); err != nil {
 			log.Println(err)
 			s.Reset()
